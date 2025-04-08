@@ -1,13 +1,16 @@
-# builder phase
-FROM node:alpine as builder
+FROM node:alpine AS builder
 
-WORKDIR '/app'
+WORKDIR /app
 
 COPY package.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
+
 COPY ./ ./
+
+# 👇 Add this line to fix the crypto issue
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 RUN npm run build
 
 FROM nginx
-EXPOSE 80
 COPY --from=builder /app/build /usr/share/nginx/html
