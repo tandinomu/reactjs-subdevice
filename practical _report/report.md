@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Docker is a containerization platform used to package applications along with their dependencies into containers. This ensures that applications run seamlessly across different environments, including development, testing, and production. This report documents the process of containerizing a React.js application as shown in the screenshots.
+Docker is an open source software platform used to create, deploy and manage virtualized application containers on a common operating system (OS), with an ecosystem of allied tools. 
 
 ## Containerization
 
@@ -14,9 +14,6 @@ This is the process of packaging an application and its dependencies (libraries,
 
 ![1](./Images/1.png)
 
-```bash
-npm install
-```
 
 The terminal output shows several deprecated packages and warnings related to package versions, which is typical during npm installations. 
 
@@ -26,15 +23,6 @@ The Docker build process was executed with:
 
 ![2](./Images/2.png)
 
-The screenshots show the build process including:
-- Loading build definition from Dockerfile
-- Transferring the Docker context
-- Loading metadata for the docker.io/library/node:alpine image
-- Transferring layers and files
-- Caching packages for efficient build
-- Executing npm install with legacy peer dependencies flag
-- Building the application
-- Exporting layers and the final image
 
 ### 3. Running Docker Containers
 
@@ -43,12 +31,15 @@ After successful build, containers were launched with:
 ```bash
 docker run -d -p 3000:3000 tandinomu/react-app
 ```
+![6](./Images/6.png)
+![5](./Images/5.png)
 
 And later:
 
 ```bash
 docker run -d -p 81:80 sha256:6c41dda2ab1bb448c413a5f4bfc3e0c6fbeee64b124c52ea2c118ca8cb55e2ce
 ```
+![14](./Images/13.png)
 
 This maps port 81 on the host to port 80 in the container.
 
@@ -59,6 +50,7 @@ To verify running containers, the command was used:
 ```bash
 docker ps
 ```
+![8](./Images/8.png)
 
 The output shows three containers running:
 - A container with ID starting with 1c7ceb10efc (tandinomu/react-app)
@@ -67,50 +59,28 @@ The output shows three containers running:
 
 All containers were successfully running with port mapping 3000:3000/tcp for the first two and a unique name for each container.
 
-An additional container was later launched with name "bold_booth" with port mapping 81:80/tcp.
 
 ### 5. Running Tests
 
 The application has test capability, with a test suite that successfully passed:
 
-```
-PASS src/App.test.js
-✓ renders without crashing (30ms)
+![9](./Images/9.png)
 
-Test Suites: 1 passed, 1 total
-Tests:       1 passed, 1 total
-Snapshots:   0 total
-Time:        10.631s, estimated 67s
-```
-
-The test output shows options to:
-- Press f to run only failed tests
-- Press o to only run tests related to changed files
-- Press p to filter by a filename regex pattern
-- Press q to quit watch mode
-- Press t to filter by a test name regex pattern
-- Press Enter to trigger a test run
 
 ### 6. Dockerfile for Production
 
-A multi-stage Dockerfile was created to optimize the production build. The second build shown in the screenshots represents this process, with a successful build producing a container that was then run with port 81 mapped to container port 80.
+A multi-stage Dockerfile was created to optimize the production build. The screenshot below represents this process, with a successful build producing a container that was then run with port 81 mapped to container port 80.
 
-## Docker Command Reference
-
-Based on the screenshots, the following Docker commands were used:
+![10](./Images/10.png)
+ 
+### 7. Verify Running Container
+Access the application in the browser:
 
 ```bash
-# Build Docker image
-docker build .
-
-# Run container with port mapping
-docker run -d -p 3000:3000 tandinomu/react-app
-docker run -d -p 81:80 [IMAGE_ID]
-
-# Check running containers
-docker ps
+http://localhost:8082
 ```
+![14](./Images/14.png)
 
 ## Conclusion
 
-The Docker containerization of the React.js application was successful. Three containers were created and run successfully with appropriate port mappings. The application's test suite passed, confirming that the containerization did not affect the application functionality.
+The Docker containerization of the React.js application was successfully completed. The installation of dependencies, building Docker images, and running multiple containers with appropriate port mappings (3000:3000 for development and 81:80 for production) were successful. The multi-stage Dockerfile optimized the production build by reducing image size. All containers ran correctly, and the application's test suite passed, confirming that functionality was preserved during containerization. This exercise demonstrated Docker's effectiveness in creating consistent, portable environments for web application deployment.
